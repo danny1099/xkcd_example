@@ -4,7 +4,9 @@ export function Header() {
   return (
     <header className='flex justify-between items-center p-4 max-w-xl m-auto'>
       <h1 className='font-bold'>
-        XKCD<span className='font-light'>Next</span>
+        <Link href='/' className='transition hover:opacity-70'>
+          XKCD<span className='font-light'>Next</span>
+        </Link>
       </h1>
       <nav>
         <ul className='flex flex-row gap-2'>
