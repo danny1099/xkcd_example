@@ -1,10 +1,9 @@
 /* eslint-disable */
 import Head from 'next/head';
 import Image from 'next/image';
-import { Header } from 'components/Header';
-import { readFile, stat, readdir } from 'fs/promises';
 import Link from 'next/link';
 import { basename } from 'path';
+import { readFile, stat, readdir } from 'fs/promises';
 
 export default function Comic({
   img,
@@ -20,48 +19,43 @@ export default function Comic({
   return (
     <>
       <Head>
-        <title>XKCD APP | Comics for developers</title>
-        <meta name='description' content='Comics for developers' />
-        <link rel='icon' href='/favicon.ico' />
+        <title>XKCD APP | {title}</title>
+        <meta name='description' content={alt} />
       </Head>
 
-      <Header />
-
-      <main>
-        <section className='max-w-lg m-auto'>
-          <div className='flex flex-col justify-center items-center'>
-            <h1>{title}</h1>
-            <div className='max-w-lg m-auto mb-4'>
-              <Image
-                layout='responsive'
-                src={img}
-                alt={alt}
-                height={height}
-                width={width}
-              />
-            </div>
-            <p className='text-sm text-slate-800 mt-2 '>{alt}</p>
+      <section className='max-w-lg m-auto'>
+        <div className='flex flex-col justify-center items-center'>
+          <h1>{title}</h1>
+          <div className='max-w-lg m-auto mb-4'>
+            <Image
+              layout='responsive'
+              src={img}
+              alt={alt}
+              height={height}
+              width={width}
+            />
           </div>
+          <p className='text-sm text-slate-800 mt-2 '>{alt}</p>
+        </div>
 
-          <div className='flex flex-row justify-between rounded-lg bg-gray-50 p-4 mt-4'>
-            {hasPrevious && (
-              <Link
-                className='text-gray-600 font-semibold'
-                href={`/comic/${prevComic}`}>
-                ⬅ Previous
-              </Link>
-            )}
+        <div className='flex flex-row justify-between rounded-lg bg-gray-50 p-4 mt-4'>
+          {hasPrevious && (
+            <Link
+              className='text-gray-600 font-semibold'
+              href={`/comic/${prevComic}`}>
+              ⬅ Previous
+            </Link>
+          )}
 
-            {hasNext && (
-              <Link
-                className='text-gray-600 font-semibold'
-                href={`/comic/${nextComic}`}>
-                Next ➡
-              </Link>
-            )}
-          </div>
-        </section>
-      </main>
+          {hasNext && (
+            <Link
+              className='text-gray-600 font-semibold'
+              href={`/comic/${nextComic}`}>
+              Next ➡
+            </Link>
+          )}
+        </div>
+      </section>
     </>
   );
 }

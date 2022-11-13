@@ -16,9 +16,6 @@ export function Header() {
           <li className='text-sm font-semibold'>
             <Link href='/search'>Search</Link>
           </li>
-          <li className='text-sm font-semibold'>
-            <Link href='/comic'>Comics</Link>
-          </li>
         </ul>
       </nav>
     </header>
