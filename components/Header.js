@@ -1,25 +1,29 @@
 /* eslint-disable */
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 export function Header() {
-  const [data, setData] = useState({ key: '', hits: [] });
+  const [data, setData] = useState([]);
+  const searchRef = useRef();
+  
 
-  const handleChange = (e) => {
-    setData({ key: e.target.value, hits: [] });
+  const handleChange = () => {
+    const q = searchRef.current.value;
+    
+    /* Valida si existe un dato de busqueda escrito */
+    q === '' 
+      ? [] 
+      : searchHitByAlgolia(q);
+
+    console.log(data);
   };
-
-  useEffect(() => {
-    /* Solo ejecuta la busqueda cuando el largo del texto sea mayor a un minimo de caracteres */
-    data.key.length >= 3 && searchHitByAlgolia(data.key);
-  }, [data.key]);
 
   function searchHitByAlgolia(key) {
     fetch(`/api/search?q=${key}`)
       .then((res) => res.json())
       .then((result) => {
-        setData({ ...data, hits: result });
+        setData(result)
       });
   }
 
@@ -37,32 +41,37 @@ export function Header() {
               type='search'
               placeholder='Buscar...'
               onChange={handleChange}
-              className='text-xs border border-slate-200 p-1 w-72'
+              ref={searchRef}
+              className='text-xs border border-slate-200 px-4 py-2 w-72 rounded-xl'
             />
 
-            {data.hits.length > 0 && (
-              <div className='absolute top-8 left-0 bg-white w-72 flex flex-col border border-slate-100 p-1'>
-                <ul>
-                  {data.hits.map((hit) => {
-                    return (
-                      <li key={hit.id}>
+            <div className='relative z-10'>
+              {Boolean(data.length) > 0 && (
+                <div className='absolute top-0 left-0 bg-white w-72 flex flex-col shadow-xl border-gray-100 p-2'>
+                  <ul>
+                      <li key="all-results">
                         <Link
-                          href={`/comic/${hit.id}`}
-                          className='flex flex-row content-center h-12'>
-                          <Image
-                            src={hit.img}
-                            alt={hit.alt}
-                            width='30'
-                            height='30'
-                          />
-                          <h4 className='text-xs ml-1'>{hit.title}</h4>
+                          href={`/search?q${searchRef.current.value}`}
+                          className='flex flex-row content-center text-sm text-gray-400 italic font-semibold'>
+                            Ver {data.length} resultados
                         </Link>
                       </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            )}
+                    
+                    {data?.map((hit) => {
+                      return (
+                        <li key={hit.id}>
+                          <Link
+                            href={`/comic/${hit.id}`}
+                            className='content-center text-xs ml-1 block'>
+                            {hit.title}
+                          </Link>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </div>
           </li>
         </ul>
       </nav>
